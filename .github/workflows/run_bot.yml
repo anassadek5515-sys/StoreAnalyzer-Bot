@@ -1,0 +1,36 @@
+name: StoreAnalyzer Autonomous Cloud Bot
+
+on:
+  schedule:
+    - cron: '0 */6 * * *' # يشتغل تلقائياً في السحاب كل 6 ساعات!
+  workflow_dispatch: # زرار لتشغيل البوت يدوياً في أي وقت من موقع جيت هب
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # السماح للبوت بتحديث حفظ الملفات في المستودع تلقائياً
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: |
+          pip install duckduckgo-search pandas
+
+      - name: Run Autonomous Search Bot
+        run: |
+          python auto_search.py
+
+      - name: Commit and Push Results
+        run: |
+          git config --global user.name "Cloud Automation Bot"
+          git config --global user.email "bot@storeanalyzer.cloud"
+          git add auto_found_stores.txt
+          git commit -m "Auto-update: New stores discovered by cloud bot" || echo "No changes to commit"
+          git push
