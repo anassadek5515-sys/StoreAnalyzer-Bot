@@ -1,5 +1,5 @@
 import os
-from ddgs import DDGS
+from duckduckgo_search import DDGS
 
 # الكلمات المفتاحية العالمية والعربية للبحث السريع
 SEARCH_QUERIES = [
@@ -9,7 +9,7 @@ SEARCH_QUERIES = [
 ]
 
 def fast_autonomous_search():
-    print("🚀 بدأ البوت السريع بالبحث الفوري بـ ddgs...")
+    print("🚀 بدأ البوت السريع بالبحث الفوري...")
     
     discovered_stores = set()
     filename = "auto_found_stores.txt"
@@ -20,7 +20,7 @@ def fast_autonomous_search():
             for line in f:
                 discovered_stores.add(line.strip())
 
-    # البحث باستخدام المكتبة المحدثة ddgs
+    # البحث باستخدام المكتبة
     try:
         with DDGS() as ddgs:
             for query in SEARCH_QUERIES:
