@@ -1,38 +1,43 @@
 import os
-from duckduckgo_search import DDGS
+from ddgs import DDGS
 
-# الكلمات المفتاحية المركزة للبحث السريع
+# الكلمات المفتاحية العالمية والعربية للبحث السريع
 SEARCH_QUERIES = [
-    "متاجر إلكترونية تسوق online store",
-    "متجر شوبيفاي عربي تسوق",
+    "online store",
+    "ecommerce shop",
+    "متجر إلكتروني تسوق",
 ]
 
 def fast_autonomous_search():
-    print("🚀 بدأ البوت السريع بالبحث الفوري...")
+    print("🚀 بدأ البوت السريع بالبحث الفوري بـ ddgs...")
     
     discovered_stores = set()
     filename = "auto_found_stores.txt"
     
+    # قراءة المواقع القديمة لو موجودة
     if os.path.exists(filename):
         with open(filename, "r", encoding="utf-8") as f:
             for line in f:
                 discovered_stores.add(line.strip())
 
-    # البحث السريع بدون فترات انتظار طويلة
-    with DDGS() as ddgs:
-        for query in SEARCH_QUERIES:
-            print(f"🔍 جاري البحث: [{query}]")
-            try:
+    # البحث باستخدام المكتبة المحدثة ddgs
+    try:
+        with DDGS() as ddgs:
+            for query in SEARCH_QUERIES:
+                print(f"🔍 جاري البحث عن: [{query}]")
                 results = ddgs.text(query, max_results=10)
-                for r in results:
-                    url = r.get("href")
-                    if url and url not in discovered_stores:
-                        discovered_stores.add(url)
-                        print(f"   [+] تم العثور على: {url}")
-            except Exception as e:
-                print(f"   [!] خطأ: {e}")
+                if results:
+                    for r in results:
+                        url = r.get("href")
+                        if url and url not in discovered_stores:
+                            discovered_stores.add(url)
+                            print(f"   [+] تم العثور على: {url}")
+                else:
+                    print(f"   [-] لم تُرجع نتائج لهذه الكلمة.")
+    except Exception as e:
+        print(f"   [!] حدث خطأ عام أثناء البحث: {e}")
 
-    # حفظ النتائج فوراً
+    # حفظ النتائج في الملف
     with open(filename, "w", encoding="utf-8") as f:
         for store in discovered_stores:
             f.write(store + "\n")
