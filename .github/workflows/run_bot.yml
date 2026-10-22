@@ -2,14 +2,14 @@ name: StoreAnalyzer Autonomous Cloud Bot
 
 on:
   schedule:
-    - cron: '0 */6 * * *' # يعمل أوتوماتيكياً في السحاب كل 6 ساعات
-  workflow_dispatch: # زرار لتشغيل البوت يدوياً في أي وقت من جيت هب
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
 
 jobs:
   run-bot:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # السماح للبوت بحفظ وتحديث ملف المتاجر مباشرة في المستودع
+      contents: write
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -21,7 +21,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip install duckduckgo-search pandas
+          pip install requests beautifulsoup4 pandas
 
       - name: Run Autonomous Search Bot
         run: |
